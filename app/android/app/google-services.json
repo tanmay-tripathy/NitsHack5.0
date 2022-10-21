@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "716368269406",
+    "project_id": "nitshack-ae4d2",
+    "storage_bucket": "nitshack-ae4d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716368269406:android:47be64879de64ceb0124cf",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716368269406-cho0srsvcdq23p78j4g7htp2dm7m8305.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqznHVb35zx4evvqQHzrWMOX63-Fd-uOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716368269406-cho0srsvcdq23p78j4g7htp2dm7m8305.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
