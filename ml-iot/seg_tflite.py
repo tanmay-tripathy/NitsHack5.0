@@ -109,8 +109,12 @@ input_shape = input_details[0]['shape']
 # cap.release()
 # cv2.destroyAllWindows()
 
+reference = {
 
-img = cv2.imread('test_images/glass.jpg')
+}
+
+
+img = cv2.imread('test_images/test1.jpg')
 make_and_show_inference(img, interpreter, input_details,
                         output_details, category_index)
 cv2.imshow("image", img)

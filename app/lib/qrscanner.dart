@@ -1,9 +1,11 @@
-import 'dart:developer';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:http/http.dart' as http;
 
 class QRScanner extends StatefulWidget {
   const QRScanner({Key? key}) : super(key: key);
@@ -68,7 +70,30 @@ class _QRScannerState extends State<QRScanner> {
       setState(() {
         result = scanData;
       });
+      postRequest(result?.code);
     });
+  }
+
+  void postRequest(String? id) async {
+    try {
+      final Uri getUri = Uri.parse('https://nitshack.herokuapp.com/user/');
+      final http.Request getRequest = http.Request('POST', getUri);
+      getRequest.headers
+          .addAll({'Origin': '*', 'Access-Control-Allow-Origin': '*'});
+
+      String auth = FirebaseAuth.instance.currentUser!.uid;
+      Map<String, String> body = {'userID': auth.toString(), 'dustBin': id!};
+      getRequest.body = json.encode(body.toString());
+
+      final http.StreamedResponse response = await getRequest.send();
+      final String responseString = await response.stream.bytesToString();
+
+      final Map<String, dynamic> responseBody =
+          json.decode(responseString) as Map<String, dynamic>;
+      print(responseBody.toString());
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
