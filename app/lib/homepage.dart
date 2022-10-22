@@ -1,5 +1,6 @@
 // Home page screen
 
+import 'package:app/qrscanner.dart';
 import 'package:app/signin_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,13 @@ class _HomePageState extends State<HomePage> {
       // In body text containing 'Home page ' in center
       body: const Center(
         child: Text('Nothing to show here'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const QRScanner()));
+        },
+        child: const Icon(Icons.qr_code_scanner),
       ),
     );
   }
