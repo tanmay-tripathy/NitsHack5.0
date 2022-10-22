@@ -4,14 +4,14 @@ module.exports = {
     get : async (req,res) => {
         try {
             const docs = await db.collection('history')
-                .where('dusbinID', '==' , req.params.dustbinID)
+                .where('dustbinID', '==' , req.params.dustbinID)
                 .orderBy('timestamp','desc')
                 .limit(1)
                 .get();
         
             let objects = [];
             docs.forEach(elem => objects.push(elem.data()));
-            res.status(200).send(objects);
+            res.status(200).send(objects[0]);
         } catch(err) {
             res.status(500).send(err);            
         }
@@ -24,52 +24,61 @@ module.exports = {
             const response = await db.collection('dustbinData').get();
             response.forEach(elem => dustbinIDs.push({id: elem.id, data:elem.data()}));
         } catch(err) {
-            res.status(500).send(err);
+            return res.status(500).send(err);
         }
-        
-        let composition = {
-            biodegradable : 0,
-            nonbiodegradable : {
-                bottle: 0,
-                glass: 0,
-                metal: 0,
-                plastic: 0    
-            }
-        };
-
-        let weight = 0;
-
-        dustbinIDs.forEach( async (elem) => {
-            let object = [];
-            try{
-                const docs = await db.collection('history')
-                    .where('dusbinID', '==' , elem.id)
-                    .orderBy('timestamp','desc').limit(1)
-                    .get();
-                docs.forEach(elem=> object.push(elem.data()));
-            } catch(err) {
-                res.status(500).send(new Error('Unknown Error'))
-            }
-
-            weight += object[0].weight;
+    
+        let objects = [];
+        for await (const elem of dustbinIDs) {
+            const response = await db.collection('history')
+                .where('dustbinID','==',elem.id)
+                .orderBy('timestamp','desc').limit(1)
+                .get();
             
-            if(object[0].composition.biodegradable !== null) {
-                composition.biodegradable += (object.biodegradable)*(object.weight)/100;
+            response.forEach(elem=>objects.push(elem.data()));
+        }
+
+        let weight = 0; 
+        let biodegradable = 0;
+        let bottle = 0;
+        let metal = 0;
+        let plastic = 0;
+        let glass = 0;
+
+        for (const elem of objects) {
+            weight += elem.weight;
+            if(elem.composition.biodegradable === undefined) {
+                console.log('bio null');
+            }else {
+                biodegradable += elem.composition.biodegradable;
             }
 
-            if(object[0].composition.nonbiodegradable !== null) {
-                composition.nonbiodegradable.bottle += (object[0].nonbiodegradable.bottle)*(object[0].weight)/100;
-                composition.nonbiodegradable.plastic += (object[0].nonbiodegradable.plastic)*(object[0].weight)/100;
-                composition.nonbiodegradable.glass += (object[0].nonbiodegradable.glass)*(object[0].weight)/100;
-                composition.nonbiodegradable.metal += (object[0].nonbiodegradable.metal)*(object[0].weight)/100;
+            if(elem.composition.nonbiodegradable === null) {
+                console.log('non bio null');
+            } else {
+                bottle += elem.composition.nonbiodegradable.bottle*elem.weight/100;
+                metal += elem.composition.nonbiodegradable.metal*elem.weight/100;
+                glass += elem.composition.nonbiodegradable.glass*elem.weight/100;
+                plastic += elem.composition.nonbiodegradable.plastic*elem.weight/100;
+            }
+        }
+
+        biodegradable /= weight/100;
+        bottle /= weight/100;
+        metal /= weight/100;
+        glass /= weight/100;
+        plastic /= weight/100;
+
+        res.status(200).json({
+            weight: weight,
+            composition: {
+                biodegradable: biodegradable,
+                nonbiodegradable: {
+                    bottle: bottle,
+                    metal: metal,
+                    plastic: plastic,
+                    glass: glass         
+                }
             }
         });
-
-        composition.nonbiodegradable.bottle /= weight/100;
-        composition.nonbiodegradable.plastic /= weight/100;
-        composition.nonbiodegradable.metal /= weight/100;
-        composition.nonbiodegradable.glass /= weight/100;
-        
-        res.status(200).send(composition);    
     }
 }
