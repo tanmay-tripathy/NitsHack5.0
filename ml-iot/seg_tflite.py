@@ -3,6 +3,13 @@ import tensorflow as tf
 import cv2
 import visualization_utils as vis_util
 
+# To do: more reference for all different waste to be added
+reference_factor = {
+    45: 0.5,
+    86: 0.2,
+    85: 0.3
+}
+
 
 def create_category_index(label_path='coco_ssd_mobilenet/labelmap.txt'):
     f = open(label_path)
@@ -70,7 +77,16 @@ def make_and_show_inference(img, interpreter, input_details, output_details, cat
     interpreter.invoke()
     output_dict = get_output_dict(
         img_rgb, interpreter, output_details, nms, iou_thresh, score_thresh)
-    print(output_dict['detection_boxes'])
+    print('Bounding box: ', output_dict['detection_boxes'])
+    print('Class: ', category_index[output_dict['detection_classes'][0]])
+    print(
+        'Name: ', category_index[output_dict['detection_classes'][0]]['name'])
+    print('Box size: ', (output_dict['detection_boxes'][0][2] - output_dict['detection_boxes'][0][0]) * (
+        output_dict['detection_boxes'][0][3] - output_dict['detection_boxes'][0][1]))
+    size = (output_dict['detection_boxes'][0][2] - output_dict['detection_boxes'][0][0]) * (
+        output_dict['detection_boxes'][0][3] - output_dict['detection_boxes'][0][1])
+    print('Estimated weight: ', size *
+          reference_factor[category_index[output_dict['detection_classes'][0]]['id']], 'gram')
     # Visualization of the results of a detection.
     vis_util.visualize_boxes_and_labels_on_image_array(
         img,
@@ -109,14 +125,9 @@ input_shape = input_details[0]['shape']
 # cap.release()
 # cv2.destroyAllWindows()
 
-reference = {
 
-}
-
-
-img = cv2.imread('test_images/test1.jpg')
+img = cv2.imread('test_images/test3.jpg')
 make_and_show_inference(img, interpreter, input_details,
                         output_details, category_index)
 cv2.imshow("image", img)
 cv2.waitKey(0)
-print('Hello')

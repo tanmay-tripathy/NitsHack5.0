@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                             title: Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: Text(
-                                'Weight dumped: ${snapshot.data[index].weight} kg',
+                                'Weight dumped: ${snapshot.data[index].weight} gram',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -123,14 +123,14 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  'Biodegradable composition: ${snapshot.data[index].biodegradable} %',
+                                  'Biodegradable composition: ${snapshot.data[index].biodegradable}%',
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 const SizedBox(
                                   height: 3,
                                 ),
                                 Text(
-                                    'Non-biodegradable composition: ${snapshot.data[index].nonbiodegradable} %',
+                                    'Non-biodegradable composition: ${snapshot.data[index].nonbiodegradable}%',
                                     style: const TextStyle(fontSize: 12)),
                               ],
                             ),

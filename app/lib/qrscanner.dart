@@ -54,8 +54,7 @@ class _QRScannerState extends State<QRScanner> {
             flex: 1,
             child: Center(
               child: (result != null)
-                  ? Text(
-                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                  ? Text('Dusbin ID: ${result!.code}')
                   : Text('Scan a code'),
             ),
           )
