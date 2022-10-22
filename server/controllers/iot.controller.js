@@ -1,7 +1,7 @@
 const db = require('../configs/firebaseConfig');
 
 module.exports = {
-    send : async (res,req) => {
+    send : async (req,res) => {
         try{
             const response = await db.collection('history').doc().set({
                 userID: null,
