@@ -1,28 +1,33 @@
-import 'dart:ffi';
-
 class HistoryModel {
   String userID;
-  Map<String, dynamic> timestamp;
-  Float weight;
-  String dusbinID;
-  Map<String, dynamic> composition;
-  Map<String, dynamic> location;
+  double weight;
+  String dustbinID;
+  int? biodegradable;
+  int? nonbiodegradable;
+  int latitude;
+  int logitude;
+  int seconds;
 
-  HistoryModel(
-      {required this.userID,
-      required this.timestamp,
-      required this.weight,
-      required this.dusbinID,
-      required this.composition,
-      required this.location});
+  HistoryModel({
+    required this.userID,
+    required this.seconds,
+    required this.weight,
+    required this.dustbinID,
+    required this.biodegradable,
+    required this.nonbiodegradable,
+    required this.latitude,
+    required this.logitude,
+  });
 
   factory HistoryModel.fromJson(Map<String, dynamic> json) {
     return HistoryModel(
         userID: json['userID'],
-        timestamp: json['timestamp'],
+        seconds: json['timestamp']['_seconds'],
         weight: json['weight'],
-        dusbinID: json['dusbinID'],
-        composition: json['composition'],
-        location: json['location']);
+        dustbinID: json['dustbinID'],
+        biodegradable: json['composition']['biodegradable'] ?? 0,
+        nonbiodegradable: json['composition']['nonbiodegradable'] ?? 0,
+        latitude: json['location']['_latitude'],
+        logitude: json['location']['_longitude']);
   }
 }
