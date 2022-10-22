@@ -26,7 +26,7 @@ class _GoogleSignInState extends State<GoogleSignIn> {
     // MaterialApp contain some basic ui for android ,
     return MaterialApp(
       //materialApp title
-      title: 'GEEKS FOR GEEKS',
+      title: 'NITSHACK',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
